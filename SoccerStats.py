@@ -12,43 +12,34 @@ dashapp = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 #### data exploration ######
 
-dframe=pan.read_csv("/Users/venelinavateva/PycharmProjects/Soccer/soccerstats.csv",index_col=0,)
+datafile=pan.read_csv("/Users/venelinavateva/PycharmProjects/Soccer/soccerstats.csv",
+                    index_col=0)
 
 
-#dframe=pan.DataFrame(datafile)
+
+dframe=pan.DataFrame(datafile)
 print(dframe)
 
 dcolumns=dframe.columns
-print(dcolumns)
+#print(dcolumns)
 
-types=dframe["Name","Value","Age","Nationality","Wage","Body Type","Joined","Work Rate"].dtypes
-print(types)
-#dframe.Wage=dframe.Wage.astype(str)
+#types=dframe["Name","Value","Age","Nationality","Wage","Body Type","Joined","Work Rate"].dtypes
 #print(types)
 
 
 #Data Cleanup#
 
-# replacebadnum = {
-#     'K' : 1000,
-#     'M' : 1000000}
-#
-#
-# def good_number(s):
-#     multiply = 1.0
-#     while s[-1] in good_number:
-#         multiply *= good_number[s[-1]]
-#         s = s[:-1]
-#     return float(s) * multiply
 
-dframe["Wage","Value"]=dframe["Wage","Value"].replace(to_replace=r'[€]+',value='',regex=True)
-dframe["Wage","Value"].replace({'K': '*1e3', 'M': '*1e6'}, regex=True)
-dframe["Wage","Value"].pan.eval.astype(int)
+dframe[["Wage","Value"]]=dframe[["Wage","Value"]].replace(to_replace=r'[€]+',value='',regex=True)
+
+dframe.Value = (dframe.Value.replace(r'[KM]+$', '', regex=True).astype(float) * \
+dframe.Value.str.extract(r'[\d\.]+([KM]+)', expand=False).fillna(1).replace(['K','M'], [10**3, 10**6]).astype(int))
+
+dframe.Wage = (dframe.Wage.replace(r'[KM]+$', '', regex=True).astype(float) * \
+dframe.Wage.str.extract(r'[\d\.]+([KM]+)', expand=False).fillna(1).replace(['K','M'], [10**3, 10**6]).astype(int))
 
 
-print(dframe[["Wage","Value"]])
-
-
+#print(dframe[["Wage","Value"]].sort_values(by="Wage",ascending=True))
 
 
 
@@ -57,8 +48,8 @@ sortedframe=dframe.sort_values(by="ID",ascending=False)
 sortedframe.drop_duplicates()
 sortedframe.dropna()
 
-#smalldataset=sortedframe[0:1000]
-#print(smalldataset[["Name","Value","Age","Nationality","Wage","Body Type","Joined","Work Rate"]])
+smalldataset=sortedframe[0:1500]
+print(smalldataset[["Name","Value","Age","Nationality","Wage","Body Type","Joined","Work Rate"]])
 
 #
 # dashapp.layout = html.Div([
