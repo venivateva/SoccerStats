@@ -49,8 +49,14 @@ sortedframe.dropna()
 smalldataset = sortedframe[0:100]
 print(smalldataset[["Name","Value","Age","Nationality","Wage","Body Type","Joined","Work Rate"]])
 
+colors={
+        'background':'#bbd7ff',
+        'text':'#000000'}
 
-dashapp.layout = html.Div([
+dashapp.layout = html.Div(style={'backgroundColor':colors['background']},
+                          children=
+    [html.H1(children='Soccer Stats',style={'textAlign':'center', 'color':colors['text']}),
+
     dcc.Graph(
         id='Nationality and Wage',
         figure={
@@ -58,7 +64,7 @@ dashapp.layout = html.Div([
                 go.Scatter(
                     x=sortedframe[sortedframe['Nationality'] == i]['Wage'],
                     y=sortedframe[sortedframe['Nationality'] == i]['Value'],
-                    text=sortedframe[sortedframe['Nationality'] == i]['Nationality'],
+                    text=sortedframe[sortedframe['Nationality'] == i]['Name'],
                     mode='markers',
                     opacity=0.7,
                     hoverinfo=sortedframe[sortedframe["Name"]==i]["Name"],
