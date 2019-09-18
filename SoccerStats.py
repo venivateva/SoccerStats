@@ -27,7 +27,7 @@ dcolumns = dframe.columns
 # print(types)
 
 
-# Data Cleanup#
+# Data Cleanup #
 
 
 dframe[["Wage","Value"]]=dframe[["Wage","Value"]].replace(to_replace=r'[€]+',value='',regex=True)
